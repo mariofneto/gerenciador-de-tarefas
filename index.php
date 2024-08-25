@@ -1,13 +1,13 @@
 <?php
+
+require __DIR__ . 'connect.php';
+
 session_start();
+
 if (!isset($_SESSION['tasks'])) {
     $_SESSION['tasks'] = array();
 }
 
-if (isset($_GET['clear'])) {
-    unset($_SESSION['tasks']);
-    unset($_GET['clear']);
-}
 
 ?>
 
@@ -31,7 +31,7 @@ if (isset($_GET['clear'])) {
             <h1>Gerenciador de Tarefas</h1>
         </div>
         <div class="form">
-            <form action="task.php" method="post">
+            <form action="task.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="insert" value="insert">
                 <label for="task_name">Tarefa:</label>
                 <input type="text" name="task_name" placeholder="Nome da Tarefa">
@@ -39,6 +39,8 @@ if (isset($_GET['clear'])) {
                 <input type="text" name="task_description" placeholder="Descrição da Tarefa">
                 <label for="task_date">Data</label>
                 <input type="date" name="task_date">
+                <label for="task_image">Imagem:</label>
+                <input type="file" name="task_image">
                 <button type="submit">Cadastrar</button>
             </form>
             <?php
@@ -58,7 +60,7 @@ if (isset($_GET['clear'])) {
 
                 foreach ($_SESSION['tasks'] as $key => $task) {
                     echo "<li>
-                    <span>" . $task['task_name'] . "</span>
+                    <a href='details.php?key=$key'>" . $task['task_name'] . "</a>
                     <button type='button' class='btn-clear' onclick='deletar$key()' >Remover</button>
                     <script>
                         function deletar$key(){
@@ -75,10 +77,6 @@ if (isset($_GET['clear'])) {
             }
             ?>
 
-            <form action="" method="get">
-                <input type="hidden" name="clear" value="clear">
-                <button type="submit" class="btn-clear">Limpar Tarefas</button>
-            </form>
         </div>
         <div class="footer">
             <p>Desenvolvido por @mariofneto</p>
