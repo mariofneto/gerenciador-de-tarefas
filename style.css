@@ -140,6 +140,7 @@ a:hover {
     border-radius: 4px;
     padding: 12px;
     margin-top: 4px;
+    grid-column: 1 / 3;
 }
 
 .footer p {
@@ -159,7 +160,9 @@ a:hover {
 
 .row {
     display: grid;
-    grid-template-areas: "descricao imagem";
+    grid-template-areas:
+        "descricao imagem"
+        "footer footer";
     justify-content: space-between;
     padding: 12px;
 }
@@ -198,4 +201,18 @@ a:hover {
 .image img {
     max-width: 100%;
     height: auto;
+}
+
+.alert-success {
+    background: #C5E1A5;
+    margin: 4px;
+    padding: 12px;
+    color: #7CB342;
+}
+
+.alert-error {
+    background: #FFAB91;
+    margin: 4px;
+    padding: 12px;
+    color: #F4511B;
 }

@@ -1,6 +1,6 @@
 <?php
 
-require __DIR__ . 'connect.php';
+require __DIR__ . '/connect.php';
 
 session_start();
 
@@ -8,6 +8,9 @@ if (!isset($_SESSION['tasks'])) {
     $_SESSION['tasks'] = array();
 }
 
+$stmt = $conn->prepare("SELECT * FROM tasks");
+$stmt->execute();
+$stmt->setFetchMode(PDO::FETCH_ASSOC);
 
 ?>
 
@@ -27,6 +30,22 @@ if (!isset($_SESSION['tasks'])) {
 
 <body>
     <div class="container">
+        <?php
+        if (isset($_SESSION['success'])) {
+        ?>
+            <div class="alert-success"><?php echo $_SESSION['success']; ?></div>
+        <?php
+            unset($_SESSION['success']);
+        }
+        ?>
+        <?php
+        if (isset($_SESSION['error'])) {
+        ?>
+            <div class="alert-error"><?php echo $_SESSION['error']; ?></div>
+        <?php
+            unset($_SESSION['error']);
+        }
+        ?>
         <div class="header">
             <h1>Gerenciador de Tarefas</h1>
         </div>
@@ -55,26 +74,24 @@ if (!isset($_SESSION['tasks'])) {
         </div>
         <div class="list-tasks">
             <?php
-            if (isset($_SESSION['tasks'])) {
-                echo "<ul>";
+            echo "<ul>";
 
-                foreach ($_SESSION['tasks'] as $key => $task) {
-                    echo "<li>
-                    <a href='details.php?key=$key'>" . $task['task_name'] . "</a>
-                    <button type='button' class='btn-clear' onclick='deletar$key()' >Remover</button>
+            foreach ($stmt->fetchAll() as $task) {
+                echo "<li>
+                    <a href='details.php?key=" . $task['id'] . "'>" . $task['task_name'] . "</a>
+                    <button type='button' class='btn-clear' onclick='deletar" . $task['id'] . "()' >Remover</button>
                     <script>
-                        function deletar$key(){
+                        function deletar" . $task['id'] . "(){
                         if ( confirm('Confirmar remoção?')){
-                            window.location = 'http://localhost:80/gerenciador_de_tarefas/gerenciador-de-tarefas/task.php?key=$key';
+                            window.location = 'http://localhost:80/gerenciador_de_tarefas/gerenciador-de-tarefas/task.php?key=" . $task['id'] . "';
                         }
                             return false
                     }
                     </script>
                     </li>";
-                }
-
-                echo "</ul>";
             }
+
+            echo "</ul>";
             ?>
 
         </div>
